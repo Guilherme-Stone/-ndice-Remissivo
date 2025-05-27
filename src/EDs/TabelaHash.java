@@ -17,26 +17,26 @@ public class TabelaHash {
         }
     }
 
-    private int hash(String chave) {
-        char primeiraLetra = Character.toLowerCase(chave.charAt(0));
+    private int hash(Palavras chave) {
+        char primeiraLetra = Character.toLowerCase(chave.getPalavra().charAt(0));
         return primeiraLetra - 'a';
     }
 
-    public Palavras get(String chave) {
+    public Palavras get(Palavras chave) {
         int hash = hash(chave);
         ArrayList<BST> arvores = this.tabela[hash];
 
         if (arvores == null) return null;
 
         for (BST arvore : arvores) {
-            Palavras buscada = new Palavras(chave);
+            Palavras buscada = new Palavras(chave.getPalavra());
             Palavras encontrada = arvore.recursiveSearch(buscada);
             if(encontrada != null) return encontrada;
         }
         return null;
     }
 
-    public void put(String chave, Palavras element) {
+    public void put(Palavras chave, Palavras element) {
         int hash = hash(chave);
         ArrayList<BST> arvores = this.tabela[hash];
 
@@ -58,19 +58,21 @@ public class TabelaHash {
     }
 
     public Palavras remove(Palavras chave){
-        int hash = hash(chave.getPalavra());
+        int hash = hash(chave);
         ArrayList<BST> arvores = this.tabela[hash];
 
         if(arvores == null) return null;
 
-        Iterator<BST> it = arvores.iterator();
+       int i = 0;
 
-        while(it.hasNext()){
-            BST atual = it.next();
-            if(atual.recursiveSearch(chave).equals(chave)){
-                it.remove();
+        while(i<capacidade){
+            BST atual = arvores.get(i);
+            if(atual.recursiveSearch(chave).getPalavra().charAt(0) == chave.getPalavra().charAt(0)){
+                atual.remove(chave);
                 return atual.recursiveSearch(chave);
-            }        }
+            }
+            i++;
+        }
         return null;
     }
 

@@ -10,6 +10,7 @@ import java.util.LinkedList;
 public class BST {
 
     private Node root;
+    private int size;
 
     private class Node {
         Palavras value;
@@ -66,6 +67,7 @@ public class BST {
             recursiveAdd(node.right, element);
         }
     }
+
 
     public Palavras recursiveSearch(Palavras element) {
         return recursiveSearch(this.root, element);
@@ -151,11 +153,16 @@ public class BST {
         else return 1 + Math.max(height(node.left), height(node.right));
     }
 
+    public void remove(Palavras value) {
+        Palavras toRemove = recursiveSearch(value);
+        if (toRemove != null) {
+            remove(toRemove);
+            this.size -= 1;
+        }
+    }
 
 
     private void remove(Node toRemove) {
-
-
         if (toRemove.isLeaf()) {
             if (toRemove == this.root)
                 this.root = null;
@@ -235,7 +242,6 @@ public class BST {
     }
 
     public void printBFS() {
-        //MUDARRRRRRRRRRRRRRRRRRRRRRRRR para fila dinâmica
        FilaDinamica<Node> queue = new FilaDinamica<>();
 
         if (!isEmpty()) {
