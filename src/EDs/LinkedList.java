@@ -1,8 +1,8 @@
 package EDs;
 
 public class LinkedList {
-    Node head;
-    int num;
+    public Node head;
+   public int num;
 
     public LinkedList() {
         this.head = null;
@@ -10,9 +10,9 @@ public class LinkedList {
 
     }
 
-    private class Node {
+    public class Node {
         Node next;
-        int linha;
+        public int linha;
 
         public Node(int linha) {
             this.next = null;
@@ -24,13 +24,12 @@ public class LinkedList {
 
     public void append(int linha) {
 
-        Node current = head;
-
         Node newNode = new Node(linha);
 
-        if (current == null) {
+        if (head == null) {
             head = newNode;
         } else {
+            Node current = head;
 
             while (current.next != null) {
                 current = current.next;
@@ -38,8 +37,9 @@ public class LinkedList {
 
             current.next = newNode;
 
-            num++;
+
         }
+        num++;
     }
 
 
@@ -96,6 +96,15 @@ public class LinkedList {
             }
             num--;
         }
+    }
+
+    public void print() {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.linha+ " ");
+            current = current.next;
+        }
+
     }
 }
 

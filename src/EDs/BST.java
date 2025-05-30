@@ -9,10 +9,15 @@ import java.util.LinkedList;
 
 public class BST {
 
-    private Node root;
-    private int size;
+    public Node root;
+    public int size;
 
-    private class Node {
+    public BST(){
+        this.root = null;
+        this.size = 0;
+    }
+
+    public class Node {
         Palavras value;
         Node left;
         Node right;
@@ -44,24 +49,29 @@ public class BST {
 
 
     public void recursiveAdd(Palavras element) {
-        if (isEmpty()) this.root = new Node(element);
-        else recursiveAdd(this.root, element);
+
+         recursiveAdd(this.root, element);
     }
 
     private void recursiveAdd(Node node, Palavras element) {
+        Node newNode = new Node(element);
+
+        if(node == null){
+            this.root = newNode;
+            this.size++;
+            return;
+        }
         if (element.compareTo(node.value)<0) {
             if (node.left == null) {
-                Node newNode = new Node(element);
                 node.left = newNode;
-                node.parent = newNode;
+                this.size++;
                 return;
             }
             recursiveAdd(node.left, element);
         } else {
             if (node.right == null) {
-                Node newNode = new Node(element);
                 node.right = newNode;
-                newNode.parent = node;
+                this.size++;
                 return;
             }
             recursiveAdd(node.right, element);
@@ -75,8 +85,8 @@ public class BST {
 
     private Palavras recursiveSearch(Node node, Palavras element) {
         if (node == null) return null;
-        if (element.equals(node.value)) return element;
-        if (element.compareTo(node.value)<0)return recursiveSearch(node.left, element);
+        if (element.equalsNormalizado(node.value)) return node.value;
+        if (element.getPalavra().compareToIgnoreCase(node.value.getPalavra())<0)return recursiveSearch(node.left, element);
         else return recursiveSearch(node.right, element);
     }
 
@@ -244,17 +254,21 @@ public class BST {
     public void printBFS() {
        FilaDinamica<Node> queue = new FilaDinamica<>();
 
-        if (!isEmpty()) {
-            queue.enfileira(this.root);
+       queue.enfileira(root);
 
             while (!queue.isEmpty()) {
                 Node current = queue.desenfileirar();
 
-                System.out.println(current.value);
+                System.out.print(current.value.getPalavra() +" ");
+                current.value.getOcorrencias().print();
+                System.out.println();
+
+                if(current.left != null) queue.enfileira(current.left);
+                if(current.right != null) queue.enfileira(current.right);
 
             }
         }
+
     }
 
 
-}
