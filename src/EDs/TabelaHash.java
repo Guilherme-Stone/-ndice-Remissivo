@@ -3,16 +3,16 @@ package EDs;
 import Classes.Palavras;
 
 import java.util.ArrayList;
-
+import java.util.Iterator;
 
 
 public class TabelaHash {
-    private BST[] tabela;
-    private final int capacidade = 26;
-    private int numElementos;
+    private BST tabela[];
+    private int nElementos;
 
-    public TabelaHash() {
-        this.tabela = new BST[capacidade];
+    public TabelaHash(int capacidade) {
+        this.tabela = (BST[]) new BST[capacidade];
+        this.nElementos = 0;
     }
 
     private int hash(Palavras chave) {
@@ -20,54 +20,65 @@ public class TabelaHash {
         return primeiraLetra - 'a';
     }
 
-    public Palavras get(Palavras element) {
-        int hash = hash(element);
-
-
-        if  (hash >= 0 && hash< tabela.length && tabela[hash] != null) {
-            BST arvoreIndice = this.tabela[hash];
-            return arvoreIndice.recursiveSearch(element);
-
-        }
-       return null;
+    public BST get(Palavras chave) {
+        int hash = hash(chave);
+        return this.tabela[hash];
     }
 
-    public void put(Palavras element) {
-        int hash = hash(element);
+    public void put(Palavras palavra) {
+        int hash = hash(palavra);
+        BST arvore = this.tabela[hash];
 
-
-        if (this.tabela[hash] == null){
-            this.tabela[hash] = new BST();
+        if ( arvore == null){
+            arvore = new BST();
+            this.tabela[hash] = arvore;
+            arvore.recursiveAdd(palavra);
+            nElementos++;
         }
+        else{
 
-        BST arvoreIndice = this.tabela[hash];
+                Palavras existente =  arvore.recursiveSearch(palavra);
+                if(existente == null){
+                    arvore.recursiveAdd(palavra);
+                }
+                else{
+                    existente.getOcorrencias().append(palavra.getOcorrencias().head.linha);
 
-        Palavras existente = arvoreIndice.recursiveSearch(element);
+                }
 
-        if(existente == null){
-            arvoreIndice.recursiveAdd(element);
-            numElementos++;
-        }else {
-            if (existente.getOcorrencias() != null || !element.getOcorrencias().isEmpty()) {
-                existente.adiconaOcorencia(element.getOcorrencias().getLast());
+
+        }
+    }
+
+    public void print(){
+        for (BST bst : tabela) {
+            if (bst != null) {
+                bst.printBFS();
             }
+
+
         }
     }
 
-    public Palavras remove(Palavras element){
-        int hash = hash(element);
+    /*public Palavras remove(Palavras chave){
+        int hash = hash(chave);
+        BST arvores = this.tabela[hash];
 
+        if(arvores == null) return null;
 
-        if  (hash<0|| hash>= tabela.length|| tabela[hash] == null) return null;
+       int i = 0;
 
-        Palavras palavraRemovida = tabela[hash].remove(element);
-
-        if(palavraRemovida!=null){
-            return palavraRemovida;
-        }else{
-            return null;
+        while(i<nElementos){
+            BST atual = arvores.get(i);
+            if(atual.recursiveSearch(chave).getPalavra().charAt(0) == chave.getPalavra().charAt(0)){
+                atual.remove(chave);
+                return atual.recursiveSearch(chave);
+            }
+            i++;
         }
-}
+        return null;
+    }
+     */
 
 
 
