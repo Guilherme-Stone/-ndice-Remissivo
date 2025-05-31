@@ -3,10 +3,6 @@ package EDs;
 
 import Classes.Palavras;
 
-import java.security.PublicKey;
-import java.util.Deque;
-import java.util.LinkedList;
-
 public class BST {
 
     private Node root;
@@ -35,6 +31,10 @@ public class BST {
             return this.left == null && this.right == null;
         }
 
+    }
+
+    public BST(){
+        this.size = 0;
     }
 
 
@@ -153,12 +153,13 @@ public class BST {
         else return 1 + Math.max(height(node.left), height(node.right));
     }
 
-    public void remove(Palavras value) {
+    public Palavras remove(Palavras value) {
         Palavras toRemove = recursiveSearch(value);
         if (toRemove != null) {
             remove(toRemove);
             this.size -= 1;
         }
+        return toRemove;
     }
 
 
@@ -255,6 +256,4 @@ public class BST {
             }
         }
     }
-
-
 }

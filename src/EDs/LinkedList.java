@@ -22,6 +22,11 @@ public class LinkedList {
     }
 
 
+    public boolean isEmpty() {
+        return num == 0;
+    }
+
+
     public void append(int linha) {
 
         Node current = head;
@@ -30,6 +35,7 @@ public class LinkedList {
 
         if (current == null) {
             head = newNode;
+            num++;
         } else {
 
             while (current.next != null) {

@@ -3,18 +3,16 @@ package EDs;
 import Classes.Palavras;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+
 
 
 public class TabelaHash {
-    private ArrayList<BST>[] tabela;
-    private int capacidade;
+    private BST[] tabela;
+    private final int capacidade = 26;
+    private int numElementos;
 
-    public TabelaHash(int capacidade) {
-        this.tabela = (ArrayList<BST>[]) new ArrayList[capacidade];
-        for (int i = 0; i < capacidade; i++) {
-            this.tabela[i] = new ArrayList<>();
-        }
+    public TabelaHash() {
+        this.tabela = new BST[capacidade];
     }
 
     private int hash(Palavras chave) {
@@ -22,59 +20,54 @@ public class TabelaHash {
         return primeiraLetra - 'a';
     }
 
-    public Palavras get(Palavras chave) {
-        int hash = hash(chave);
-        ArrayList<BST> arvores = this.tabela[hash];
+    public Palavras get(Palavras element) {
+        int hash = hash(element);
 
-        if (arvores == null) return null;
 
-        for (BST arvore : arvores) {
-            Palavras buscada = new Palavras(chave.getPalavra());
-            Palavras encontrada = arvore.recursiveSearch(buscada);
-            if(encontrada != null) return encontrada;
+        if  (hash >= 0 && hash< tabela.length && tabela[hash] != null) {
+            BST arvoreIndice = this.tabela[hash];
+            return arvoreIndice.recursiveSearch(element);
+
         }
-        return null;
+       return null;
     }
 
-    public void put(Palavras chave, Palavras element) {
-        int hash = hash(chave);
-        ArrayList<BST> arvores = this.tabela[hash];
+    public void put(Palavras element) {
+        int hash = hash(element);
 
-        if ( arvores == null){
-            arvores = new ArrayList<>();
-            this.tabela[hash] = arvores;
+
+        if (this.tabela[hash] == null){
+            this.tabela[hash] = new BST();
         }
-        else{
-            for(BST arvore: arvores){
-                Palavras existentes =  arvore.recursiveSearch(element);
-                if(element != null){
-                    existentes.adiconaOcorencia(element.getOcorrencias().getLast());
-                    return;
-                }
+
+        BST arvoreIndice = this.tabela[hash];
+
+        Palavras existente = arvoreIndice.recursiveSearch(element);
+
+        if(existente == null){
+            arvoreIndice.recursiveAdd(element);
+            numElementos++;
+        }else {
+            if (existente.getOcorrencias() != null || !element.getOcorrencias().isEmpty()) {
+                existente.adiconaOcorencia(element.getOcorrencias().getLast());
             }
-
-
         }
     }
 
-    public Palavras remove(Palavras chave){
-        int hash = hash(chave);
-        ArrayList<BST> arvores = this.tabela[hash];
+    public Palavras remove(Palavras element){
+        int hash = hash(element);
 
-        if(arvores == null) return null;
 
-       int i = 0;
+        if  (hash<0|| hash>= tabela.length|| tabela[hash] == null) return null;
 
-        while(i<capacidade){
-            BST atual = arvores.get(i);
-            if(atual.recursiveSearch(chave).getPalavra().charAt(0) == chave.getPalavra().charAt(0)){
-                atual.remove(chave);
-                return atual.recursiveSearch(chave);
-            }
-            i++;
+        Palavras palavraRemovida = tabela[hash].remove(element);
+
+        if(palavraRemovida!=null){
+            return palavraRemovida;
+        }else{
+            return null;
         }
-        return null;
-    }
+}
 
 
 
