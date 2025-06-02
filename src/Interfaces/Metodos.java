@@ -1,6 +1,9 @@
 package Interfaces;
 
+import Classes.Palavras;
+
 public interface Metodos {
-    public String ignoraS(String palavra);
-    public String ignoraAcento(String palavra);
+    public boolean equalsNormalizado(Palavras palavra);
+    public String normalizar(String palavra);
+    public String normalizarSup(String palavra, int tamanho);
 }

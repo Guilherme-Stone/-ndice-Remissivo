@@ -3,16 +3,15 @@ package EDs;
 
 import Classes.Palavras;
 
-import java.security.PublicKey;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class BST {
 
     public Node root;
     public int size;
 
-    public BST(){
+    public BST() {
         this.root = null;
         this.size = 0;
     }
@@ -39,7 +38,6 @@ public class BST {
         public boolean isLeaf() {
             return this.left == null && this.right == null;
         }
-
     }
 
 
@@ -50,18 +48,18 @@ public class BST {
 
     public void recursiveAdd(Palavras element) {
 
-         recursiveAdd(this.root, element);
+        recursiveAdd(this.root, element);
     }
 
     private void recursiveAdd(Node node, Palavras element) {
         Node newNode = new Node(element);
 
-        if(node == null){
+        if (node == null) {
             this.root = newNode;
             this.size++;
             return;
         }
-        if (element.compareTo(node.value)<0) {
+        if (element.compareTo(node.value) < 0) {
             if (node.left == null) {
                 node.left = newNode;
                 this.size++;
@@ -86,7 +84,8 @@ public class BST {
     private Palavras recursiveSearch(Node node, Palavras element) {
         if (node == null) return null;
         if (element.equalsNormalizado(node.value)) return node.value;
-        if (element.getPalavra().compareToIgnoreCase(node.value.getPalavra())<0)return recursiveSearch(node.left, element);
+        if (element.getPalavra().compareToIgnoreCase(node.value.getPalavra()) < 0)
+            return recursiveSearch(node.left, element);
         else return recursiveSearch(node.right, element);
     }
 
@@ -129,7 +128,7 @@ public class BST {
         else {
             Node aux = node.parent;
 
-            while (aux.left != null && aux.value.compareTo(node.value)<0) {
+            while (aux.left != null && aux.value.compareTo(node.value) < 0) {
                 aux = aux.parent;
             }
             return aux;
@@ -146,7 +145,7 @@ public class BST {
         else {
             Node aux = node.parent;
 
-            while (aux.right != null && aux.value.compareTo(node.value)<0) {
+            while (aux.right != null && aux.value.compareTo(node.value) < 0) {
                 aux = aux.parent;
             }
             return aux;
@@ -177,7 +176,7 @@ public class BST {
             if (toRemove == this.root)
                 this.root = null;
             else {
-                if (toRemove.value.compareTo(toRemove.parent.value)< 0)
+                if (toRemove.value.compareTo(toRemove.parent.value) < 0)
                     toRemove.parent.left = null;
                 else
                     toRemove.parent.right = null;
@@ -190,7 +189,7 @@ public class BST {
                 this.root.parent = null;
             } else {
                 toRemove.left.parent = toRemove.parent;
-                if (toRemove.value.compareTo(toRemove.parent.value)< 0)
+                if (toRemove.value.compareTo(toRemove.parent.value) < 0)
                     toRemove.parent.left = toRemove.left;
                 else
                     toRemove.parent.right = toRemove.left;
@@ -201,7 +200,7 @@ public class BST {
                 this.root.parent = null;
             } else {
                 toRemove.right.parent = toRemove.parent;
-                if (toRemove.value.compareTo(toRemove.parent.value)< 0)
+                if (toRemove.value.compareTo(toRemove.parent.value) < 0)
                     toRemove.parent.left = toRemove.right;
                 else
                     toRemove.parent.right = toRemove.right;
@@ -252,23 +251,33 @@ public class BST {
     }
 
     public void printBFS() {
-       FilaDinamica<Node> queue = new FilaDinamica<>();
+        FilaDinamica<Node> queue = new FilaDinamica<>();
 
-       queue.enfileira(root);
+        queue.enfileira(root);
 
-            while (!queue.isEmpty()) {
-                Node current = queue.desenfileirar();
+        while (!queue.isEmpty()) {
+            Node current = queue.desenfileirar();
 
-                System.out.print(current.value.getPalavra() +" ");
-                current.value.getOcorrencias().print();
-                System.out.println();
+            System.out.print(current.value.getPalavra() + " ");
+            current.value.getOcorrencias().print();
+            System.out.println();
 
-                if(current.left != null) queue.enfileira(current.left);
-                if(current.right != null) queue.enfileira(current.right);
+            if (current.left != null) queue.enfileira(current.left);
+            if (current.right != null) queue.enfileira(current.right);
 
-            }
         }
-
     }
 
-
+    public void WriteWords(FileWriter fw) throws IOException {
+        recursiveWriteWords(this.root, fw);
+    }
+    // IN ORDER
+    private void recursiveWriteWords(Node node, FileWriter fw) throws IOException {
+        if(node != null){
+            recursiveWriteWords(node.left, fw);
+            fw.write(node.value.getPalavra() + ": ");
+            fw.write(node.value.getOcorrencias().toStringOcorrencia() + "\n");
+            recursiveWriteWords(node.right, fw);
+        }
+    }
+}

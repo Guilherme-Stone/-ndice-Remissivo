@@ -2,16 +2,18 @@ package EDs;
 
 import Classes.Palavras;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 
 public class TabelaHash {
-    private BST tabela[];
+    private BST[] tabela;
     private int nElementos;
+    private final int capacidade = 26;
 
-    public TabelaHash(int capacidade) {
-        this.tabela = (BST[]) new BST[capacidade];
+    public TabelaHash() {
+        this.tabela = new BST[capacidade];
         this.nElementos = 0;
     }
 
@@ -58,6 +60,10 @@ public class TabelaHash {
 
 
         }
+    }
+
+    public BST[] getTabela() {
+        return tabela;
     }
 
     /*public Palavras remove(Palavras chave){

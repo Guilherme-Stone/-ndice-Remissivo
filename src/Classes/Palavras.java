@@ -3,6 +3,8 @@ package Classes;
 import EDs.LinkedList;
 import Interfaces.Metodos;
 
+import java.text.Normalizer;
+
 
 public class Palavras implements Comparable<Palavras>, Metodos {
     private String palavra;
@@ -30,50 +32,52 @@ public class Palavras implements Comparable<Palavras>, Metodos {
     public int compareTo(Palavras palavra) {
 
 
-        return this.palavra.compareToIgnoreCase(palavra.getPalavra());
+        return this.palavra.toLowerCase().compareToIgnoreCase(palavra.getPalavra());
     }
 
+
+    @Override
     public boolean equalsNormalizado(Palavras palavra){
         return normalizar(this.palavra).equalsIgnoreCase(normalizar(palavra.getPalavra()));
     }
 
+    // RETIRA S
+    @Override
     public String normalizar(String palavra){
-        if (palavra.endsWith("ões"))
-            return normalizarSup(palavra,3) + "ão";
-        if (palavra.endsWith("ães"))
-            return normalizarSup(palavra, 3) + "ão";
-        if (palavra.endsWith("ãos"))
-            return normalizarSup(palavra, 3) + "ão";
-        if (palavra.endsWith("ais"))
-            return normalizarSup(palavra, 3) + "al";
-        if (palavra.endsWith("eis"))
-            return normalizarSup(palavra, 3) + "el";
-        if (palavra.endsWith("ois"))
-            return normalizarSup(palavra, 3) + "ol";
-        if (palavra.endsWith("vam"))
-            return normalizarSup(palavra, 3) + "r";
-        if (palavra.endsWith("is"))
-            return normalizarSup(palavra, 2) + "il";
-        if (palavra.endsWith("es"))
-            return normalizarSup(palavra, 2);
-        if (palavra.endsWith("ns"))
-            return normalizarSup(palavra, 2) + "m";
-        if (palavra.endsWith("s") && palavra.length() > 3)
-            return normalizarSup(palavra, 1);
 
-        return palavra;
+        String normalizada = Normalizer.normalize(palavra, Normalizer.Form.NFD);
+
+
+        normalizada = normalizada.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+        if (normalizada.endsWith("oes"))
+            return normalizarSup(normalizada,3) + "ão";
+        if (normalizada.endsWith("aes"))
+            return normalizarSup(normalizada, 3) + "ão";
+        if (normalizada.endsWith("aos"))
+            return normalizarSup(normalizada, 3) + "ão";
+        if (normalizada.endsWith("ais"))
+            return normalizarSup(normalizada, 3) + "al";
+        if (normalizada.endsWith("eis"))
+            return normalizarSup(normalizada, 3) + "el";
+        if (normalizada.endsWith("ois"))
+            return normalizarSup(normalizada, 3) + "ol";
+        if (normalizada.endsWith("vam"))
+            return normalizarSup(normalizada, 3) + "r";
+        if (normalizada.endsWith("is"))
+            return normalizarSup(normalizada, 2) + "il";
+        if (normalizada.endsWith("es"))
+            return normalizarSup(normalizada, 2);
+        if (normalizada.endsWith("ns"))
+            return normalizarSup(normalizada, 2) + "m";
+        if (normalizada.endsWith("s") && normalizada.length() > 3)
+            return normalizarSup(normalizada, 1);
+
+        return normalizada;
     }
 
+    @Override
     public String normalizarSup(String palavra, int tamanho){
         return palavra.substring(0, palavra.length() - tamanho);
-    }
-    @Override
-    public String ignoraS(String palavra) {
-        return "";
-    }
-
-    @Override
-    public String ignoraAcento(String palavra) {
-        return "";
     }
 }

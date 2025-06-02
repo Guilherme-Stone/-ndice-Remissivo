@@ -2,7 +2,7 @@ package EDs;
 
 public class LinkedList {
     public Node head;
-   public int num;
+    public int num;
 
     public LinkedList() {
         this.head = null;
@@ -107,10 +107,25 @@ public class LinkedList {
     public void print() {
         Node current = head;
         while (current != null) {
-            System.out.print(current.linha+ " ");
+            System.out.print(current.linha + " ");
             current = current.next;
         }
 
+    }
+
+    public String toStringOcorrencia() {
+        StringBuilder sb = new StringBuilder();
+        Node current = head;
+        boolean first = true;
+        while (current != null) {
+            if (!first) {
+                sb.append(", ");
+            }
+                sb.append(current.linha);
+                first = false;
+                current = current.next;
+        }
+        return sb.toString();
     }
 }
 
