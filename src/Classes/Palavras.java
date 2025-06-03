@@ -15,6 +15,10 @@ public class Palavras implements Comparable<Palavras>, Metodos {
         this.ocorrencias = new LinkedList();
     }
 
+    public void setPalavra(String palavra) {
+        this.palavra = palavra;
+    }
+
     public String getPalavra() {
         return palavra;
     }
@@ -38,24 +42,26 @@ public class Palavras implements Comparable<Palavras>, Metodos {
 
     @Override
     public boolean equalsNormalizado(Palavras palavra){
-        return normalizar(this.palavra).equalsIgnoreCase(normalizar(palavra.getPalavra()));
+
+        return normalizar().equalsIgnoreCase(palavra.normalizar());
     }
 
     // RETIRA S
     @Override
-    public String normalizar(String palavra){
+    public String normalizar(){
 
-        String normalizada = Normalizer.normalize(palavra, Normalizer.Form.NFD);
+        String normalizada = this.palavra;
 
-
-        normalizada = normalizada.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        if(this.palavra.length()>3){
+            normalizada = removeAccent();
+        }
 
         if (normalizada.endsWith("oes"))
-            return normalizarSup(normalizada,3) + "ão";
+            return normalizarSup(normalizada,3) + "ao";
         if (normalizada.endsWith("aes"))
-            return normalizarSup(normalizada, 3) + "ão";
+            return normalizarSup(normalizada, 3) + "ao";
         if (normalizada.endsWith("aos"))
-            return normalizarSup(normalizada, 3) + "ão";
+            return normalizarSup(normalizada, 3) + "ao";
         if (normalizada.endsWith("ais"))
             return normalizarSup(normalizada, 3) + "al";
         if (normalizada.endsWith("eis"))
@@ -70,12 +76,22 @@ public class Palavras implements Comparable<Palavras>, Metodos {
             return normalizarSup(normalizada, 2);
         if (normalizada.endsWith("ns"))
             return normalizarSup(normalizada, 2) + "m";
+        if (normalizada.endsWith("m") && normalizada.length() > 3)
+            return normalizarSup(normalizada, 1);
         if (normalizada.endsWith("s") && normalizada.length() > 3)
             return normalizarSup(normalizada, 1);
 
         return normalizada;
     }
 
+
+    public String removeAccent(){
+        String normalizada = Normalizer.normalize(this.palavra, Normalizer.Form.NFD);
+
+
+        normalizada = normalizada.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        return normalizada;
+    }
     @Override
     public String normalizarSup(String palavra, int tamanho){
         return palavra.substring(0, palavra.length() - tamanho);

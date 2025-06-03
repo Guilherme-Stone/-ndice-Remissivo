@@ -5,6 +5,7 @@ import Classes.Palavras;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.Normalizer;
 
 
 public class TabelaHash {
@@ -18,7 +19,10 @@ public class TabelaHash {
     }
 
     private int hash(Palavras chave) {
-        char primeiraLetra = Character.toLowerCase(chave.getPalavra().charAt(0));
+        String palavraNormalizada = Normalizer
+                .normalize(chave.getPalavra(), Normalizer.Form.NFD)
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        char primeiraLetra = Character.toLowerCase(palavraNormalizada.charAt(0));
         return primeiraLetra - 'a';
     }
 
@@ -45,6 +49,11 @@ public class TabelaHash {
                 }
                 else{
                     existente.getOcorrencias().append(palavra.getOcorrencias().head.linha);
+                    if(!existente.normalizar().equalsIgnoreCase(existente.removeAccent())){
+
+                        existente.setPalavra(palavra.getPalavra());
+                    }
+
 
                 }
 

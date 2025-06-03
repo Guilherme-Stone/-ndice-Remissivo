@@ -14,7 +14,7 @@ public class Main {
         BufferedReader br = null;
         FileWriter fw = null;
 
-        File file = new File("txt1");
+        File file = new File("txtIn");
 
         String[] vetor;
 
@@ -40,7 +40,7 @@ public class Main {
                 i++;
             }
 
-            fw = new FileWriter("txt1");
+            fw = new FileWriter("txtOut");
 
             for (int j = 0; j < hash.getTabela().length; j++) {
                 BST arv_aux = hash.getTabela()[j];
